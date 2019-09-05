@@ -10,7 +10,7 @@ import org.uma.jmetal.util.solutionattribute.impl.OverallConstraintViolation;
 import java.util.Arrays;
 import java.util.List;
 
-public class BioSolar extends AbstractDoubleProblem{
+public class Solar extends AbstractDoubleProblem{
 
 	
 	// Our constant values
@@ -22,10 +22,10 @@ public class BioSolar extends AbstractDoubleProblem{
     public NumberOfViolatedConstraints<DoubleSolution> numberOfViolatedConstraints ;
 
     // Constructor
-    public BioSolar() {
+    public Solar() {
         setNumberOfVariables(8);
         setNumberOfObjectives(3);
-        setNumberOfConstraints(4);
+        setNumberOfConstraints(3);
         setName("BioSolar") ;
 
         List<Double> lowerLimit = Arrays.asList(200.0, 288.0, 284.0, 0.01, 0.5, 0.5, 0.5, 0.0006) ;
@@ -56,31 +56,23 @@ public class BioSolar extends AbstractDoubleProblem{
 
 
 
+        // for solar mode
+        double ks = (n * t * A) / (ma * C_PA);
+        double delta_ts = tda - ta;
+
+        double num1 = (ma* C_PA * ks * is) - (ta * Math.log(((ks * is + ta)/ta)));
+        double den1 = (ma * C_PA * ((delta_ts) * Math.log(eur))) - (ta * (Math.log(((delta_ts) * (Math.log(eur)) + ta) / ta )));
+
+        f[0] = num1 / den1;
+        f[1] = ks;
+        f[2] = delta_ts;
 
 
-        // for solar biomass mode
-
-        double k_sb = (t * A * n) / (ma * C_PA);
-
-        double c_es_b = (tda - ta) / eur;
-
-        double num3 = ma * C_PA * (k_sb * is + c_es_b * ta) - ta * Math.log((k_sb * is + c_es_b) / ta);
-
-        double den3 = ma * C_PA * c_es_b - ta * Math.log((ta + c_es_b)/ta);
-
-
-        f[0] = num3 / den3;
-        f[1] = k_sb;
-        f[2] = c_es_b;
 
         solution.setObjective(0, f[0]);
         solution.setObjective(1, f[1]);
         solution.setObjective(2, f[2]);
-        
-        this.evaluateConstraints(solution);
     }
-    
-
 
     /** EvaluateConstraints() method */
     private void evaluateConstraints(DoubleSolution solution)  {
@@ -98,27 +90,21 @@ public class BioSolar extends AbstractDoubleProblem{
         
         
         
-        constraint[0] = -(0.0318 - ((n*ta)/(ma*C_PA)) );
+        constraint[0] = -(0.002 -((n * ta)/(ma * C_PA))); 
 
-        constraint[1] = -(315 - ((mf*n*H_V*n)/(ma*C_PA)+ta) );
+        constraint[1] = -(12.69 - (tda - ta) );
+            
         
-        constraint[2] = -(9.77 -((tda - ta)/eur) );
+        // for solar mode
+        double ks = (n * t * A) / (ma * C_PA);
+        double delta_ts = tda - ta;
+
+        double num1 = (ma* C_PA * ks * is) - (ta * Math.log(((ks * is + ta)/ta)));
+        double den1 = (ma * C_PA * ((delta_ts) * Math.log(eur))) - (ta * (Math.log(((delta_ts) * (Math.log(eur)) + ta) / ta )));
+
+        double f0 = num1 / den1;
         
-        
-        // for solar biomass mode
-
-        double k_sb = (t * A * n) / (ma * C_PA);
-
-        double c_es_b = (tda - ta) / eur;
-
-        double num3 = ma * C_PA * (k_sb * is + c_es_b * ta) - ta * Math.log((k_sb * is + c_es_b) / ta);
-
-        double den3 = ma * C_PA * c_es_b - ta * Math.log((ta + c_es_b)/ta);
-
-
-        double f0 = num3 / den3;
-        
-        constraint[3] = -(1 - f0);
+        constraint[2] = -(-1 - f0);
 
         double overallConstraintViolation = 0.0;
         int violatedConstraints = 0;
