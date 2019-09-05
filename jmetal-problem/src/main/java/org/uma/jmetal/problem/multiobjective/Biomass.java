@@ -93,10 +93,10 @@ public class Biomass extends AbstractDoubleProblem{
         
         
         
-        constraint[0] = -(-8.98 -((mf * n * H_V * n)/(ma * C_PA)));
+        constraint[0] = -(8.98 -((mf * n * H_V * n)/(ma * C_PA)));
         		
 
-        constraint[1] = -(-15.811 -((tda - ta)/eur));
+        constraint[1] = -(15.811 -((tda - ta)/eur));
         
         
         double cb = (mf * n * H_V * n) / (ma * C_PA);
@@ -109,7 +109,7 @@ public class Biomass extends AbstractDoubleProblem{
         double f0 = num2 / den2;
         
         
-        constraint[2] = -(-1 - f0);
+        constraint[2] = -(1 - f0);
 
         double overallConstraintViolation = 0.0;
         int violatedConstraints = 0;
