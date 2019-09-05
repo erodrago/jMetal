@@ -61,10 +61,12 @@ public class BioSolar extends AbstractDoubleProblem{
         // for solar biomass mode
 
         double k_sb = (t * A * n) / (ma * C_PA);
+	    
+	double c_sb = ((mf * n * H_V * n)/(ma * C_PA) + ta)
 
         double c_es_b = (tda - ta) / eur;
 
-        double num3 = ma * C_PA * (k_sb * is + c_es_b * ta) - ta * Math.log((k_sb * is + c_es_b) / ta);
+        double num3 = ma * C_PA * (k_sb * is + c_sb * ta) - ta * Math.log(((k_sb * is + c_sb) + ta) / ta);
 
         double den3 = ma * C_PA * c_es_b - ta * Math.log((ta + c_es_b)/ta);
 
@@ -111,7 +113,8 @@ public class BioSolar extends AbstractDoubleProblem{
 
         double c_es_b = (tda - ta) / eur;
 
-        double num3 = ma * C_PA * (k_sb * is + c_es_b * ta) - ta * Math.log((k_sb * is + c_es_b) / ta);
+	double c_sb = ((mf * n * H_V * n)/(ma * C_PA) + ta)
+        double num3 = ma * C_PA * (k_sb * is + c_sb * ta) - ta * Math.log(((k_sb * is + c_sb) + ta) / ta);
 
         double den3 = ma * C_PA * c_es_b - ta * Math.log((ta + c_es_b)/ta);
 
